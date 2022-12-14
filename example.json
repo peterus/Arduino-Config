@@ -1,0 +1,92 @@
+[
+  {
+    "name": "callsign",
+    "type": "string",
+    "default": "NOCALL-10"
+  },
+  {
+    "name": "network",
+    "type": "object",
+    "fields": [
+      {
+        "name": "DHCP",
+        "type": "bool",
+        "default": true
+      },
+      {
+        "name": "static",
+        "type": "object",
+        "fields": [
+          {
+            "name": "ip",
+            "type": "ip",
+            "default": "192.168.0.100"
+          },
+          {
+            "name": "subnet",
+            "type": "ip",
+            "default": "255.255.255.0"
+          },
+          {
+            "name": "gateway",
+            "type": "ip",
+            "default": "192.168.0.1"
+          },
+          {
+            "name": "dns1",
+            "type": "ip",
+            "default": "192.168.0.1"
+          },
+          {
+            "name": "dns2",
+            "type": "ip",
+            "default": "192.168.0.2"
+          }
+        ]
+      },
+      {
+        "name": "hostname",
+        "type": "object",
+        "fields": [
+          {
+            "name": "overwrite",
+            "type": "bool",
+            "default": false
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "default": "NOCALL-10"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "wifi",
+    "type": "object",
+    "fields": [
+      {
+        "name": "active",
+        "type": "bool",
+        "default": true
+      },
+      {
+        "name": "AP",
+        "type": "list",
+        "fields": [
+          {
+            "name": "SSID",
+            "type": "string",
+            "default": "YOURSSID"
+          },
+          {
+            "name": "password",
+            "type": "password",
+            "default": "YOURPASSWORD"
+          }
+        ]
+      }
+    ]
+  }
+]
