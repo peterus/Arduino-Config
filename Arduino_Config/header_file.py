@@ -1,33 +1,44 @@
 from typing import List
-from string import Template
+
 from .field import Field
 
 
-def read_template(filename):
-    with open("Arduino_Config/templates/" + filename) as temp_file:
-        return Template(temp_file.read())
-
-
-header_file = read_template("header.h")
-obj = read_template("header_obj.h")
-
-
-def create_header_fields(fields: List[Field]):
-    obj_text = ""
+def create_header_fields(f: str, fields: List[Field], level: int = 1) -> str:
     for field in fields:
-        sub_obj = ""
-        field_list = ""
         if field.type == "object":
-            sub_obj = create_header_fields(field.fields)
+            f = f + "    " * level + f"class {field.name} {{\n"
+            f = f + "    " * level + "public:\n"
+            f = create_header_fields(f, field.fields, level + 1)
+            f = f + "    " * level + "};\n"
         # elif field.type == "list":
         #    j[field.name] = [create_header_fields(field.fields)]
+        elif field.type == "string":
+            f = f + "    " * level + f"String {field.name};\n"
+        elif field.type == "bool":
+            f = f + "    " * level + f"bool {field.name};\n"
+        elif field.type == "ip":
+            f = f + "    " * level + f"IPAddress {field.name};\n"
+        elif field.type == "int":
+            f = f + "    " * level + f"int {field.name};\n"
+        elif field.type == "double":
+            f = f + "    " * level + f"double {field.name};\n"
         else:
-            field_list = field_list + f"{field.name};\n"
-        obj_text = obj_text + obj.substitute(OBJECTNAME=field.name, OBJECT=sub_obj,
-                                             CONSTRUCTOR=f"{field.name}() {{}}", FIELDS=field_list)
-    return obj_text
+            assert True, "missing type"
+    return f
 
 
-def create_header_file(fields: List[Field]):
-    text = create_header_fields(fields)
-    return header_file.substitute(OBJECT=text)
+def create_header(fields: List[Field]) -> str:
+    f = """#ifndef PROJECT_CONFIGURATION_H_
+#define PROJECT_CONFIGURATION_H_
+
+class Configuration {
+public:
+"""
+
+    f = create_header_fields(f, fields)
+
+    f = f + """};
+
+#endif
+"""
+    return f
